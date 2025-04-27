@@ -20,7 +20,8 @@ moves = [
     [1, 2]
     */
 
-    /* Pending */
+
+    /* Draw */
     
     [0, 0],
     [2, 2],
@@ -49,7 +50,7 @@ function tic_tac_toe(moves){
         }
     }
 
-    if(moves.length == 9) console.log("Pending");
+    console.log(moves.length == 9 ? "Draw" : "Pending");
 
 }
 
