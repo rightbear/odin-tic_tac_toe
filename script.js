@@ -66,7 +66,16 @@ function Gameboard() {
         console.log(boardWithCellValues);
     };
 
-    return { getBoard, drawCell, printBoard };
+    // This method will be used to restart our board
+    const resetBoard = (row, column, player) =>  {
+      for(let i = 0 ; i < rows ; i++){
+        for(let j = 0 ; j < columns ; j++){
+            board[i][j].changeCell(0);
+        }
+      }
+    }
+
+    return { getBoard, drawCell, printBoard, resetBoard };
 }
 
 /* 
@@ -157,6 +166,15 @@ function GameController(
     };
 
     const getGameResult = () => gameResult;
+
+    const restartGame = () =>  {
+      board.resetBoard();
+      activePlayer = players[0];
+      ORow = [0, 0, 0], OCol = [0, 0, 0], XRow = [0, 0, 0], XCol = [0, 0, 0];
+      OBackslash = 0, OSlash = 0, XBackslash = 0, XSlash = 0;
+      totalRound = 0;
+      gameResult = "Pending";
+    }
     
     // Initial play game message
     printNewRound();
@@ -167,7 +185,8 @@ function GameController(
       playRound,
       getActivePlayer,
       getGameResult,
-      getBoard: board.getBoard
+      getBoard: board.getBoard,
+      restartGame
     };
 }
 
@@ -220,6 +239,27 @@ function ScreenController() {
       })
     }
   
+    // Render dialog on the screen to show the game result and restart the game
+    function showDialog(gameResult){
+      const dialog = document.querySelector("dialog");
+      const dialogMsg = document.querySelector("dialog > h2");
+      const dialogBtn = document.querySelector("dialog > button");
+
+      if(gameResult != "Pending"){
+        playerTurnDiv.textContent = "Game Over";
+        dialog.showModal();
+        dialogMsg.textContent = gameResult;
+      }
+
+      // "Restart" button closes the dialog and restarts the game
+      dialogBtn.addEventListener("click", () => {
+        game.restartGame();
+        console.clear();
+        dialog.close();
+        updateScreen();
+      });
+    }
+
     // Add event listener for the board. The click handler verifies that a valid cell clicked
     function clickHandlerBoard(e) {
       const board = game.getBoard();
@@ -236,11 +276,7 @@ function ScreenController() {
 
       updateScreen();
       
-      const gameResult = game.getGameResult();
-
-      if(gameResult != "Pending"){
-        playerTurnDiv.textContent = gameResult;
-      }
+      showDialog(game.getGameResult());
     }
 
     boardDiv.addEventListener("click", clickHandlerBoard);
@@ -252,61 +288,3 @@ function ScreenController() {
 }
   
 ScreenController();
-
-
-//let moves = [
-    /* 'O' winning situation */
-    /*
-    [0, 0],
-    [2, 2],
-    [0, 2],
-    [1, 2],
-    [0, 1]
-    */
-
-    /* 'X' winning situation */
-    /*
-    [0, 0],
-    [1, 1],
-    [2, 2],
-    [1, 0],
-    [2, 0],
-    [1, 2]
-    */
-
-    /* Draw */
-    /*
-    [0, 0],
-    [2, 2],
-    [0, 2],
-    [0, 1],
-    [2, 1],
-    [1, 2],
-    [1, 0],
-    [2, 0],
-    [2, 2]
-    */
-//];
-
-/*
-function tic_tac_toe(moves){
-    let ORow = [0, 0, 0], OCol = [0, 0, 0], XRow = [0, 0, 0], XCol = [0, 0, 0];
-    let OBackslash = 0, OSlash = 0, XBackslash = 0, XSlash = 0;
-    
-    for(let i=0 ; i < moves.length ; i++){
-        let row = moves[i][0], column = moves[i][1];
-        
-        if(i % 2 == 0){
-            if(++ORow[row] == 3 || ++OCol[column] == 3 || ((row == column) && (++OBackslash == 3)) || (((row + column) == 2) && (++OSlash == 3))) console.log("Circle win!");
-        }
-        else {
-            if(++XRow[row] == 3 || ++XCol[column] == 3 || ((row == column) && (++XBackslash == 3)) || (((row + column) == 2) && (++XSlash == 3))) console.log("Cross win!");
-        }
-    }
-
-    console.log(moves.length == 9 ? "Draw" : "Pending");
-
-}
-
-tic_tac_toe(moves)
-*/
