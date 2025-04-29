@@ -75,7 +75,6 @@ function Gameboard() {
 ** anybody has won the game
 */
 
-
 function GameController(
     playerOneName = "Player One",
     playerTwoName = "Player Two"
@@ -105,12 +104,36 @@ function GameController(
       console.log(`${getActivePlayer().name}'s turn.`);
     };
   
+    // Row arrays is to check whether there is one row with 3 of same marks for player1 and player2
+    // Column arrays is to check whether there is one column with 3 of same marks for player1 and player2
+    // Slashes is to check whether there is one slash with 3 of same marks for player1 and player2
+
+    let ORow = [0, 0, 0], OCol = [0, 0, 0], XRow = [0, 0, 0], XCol = [0, 0, 0];
+    let OBackslash = 0, OSlash = 0, XBackslash = 0, XSlash = 0;
+    let totalRound = 0;
+
+    // This is the rule to check whether the game has reached the result after clicking buttons.
+
+    const checkGameResult = (row, column, playerValue) => {
+      if( ((playerValue == 1) && (++ORow[row] == 3 || ++OCol[column] == 3 || ((row == column) && (++OBackslash == 3)) || (((row + column) == 2) && (++OSlash == 3)))) || 
+          ((playerValue == 2) && (++XRow[row] == 3 || ++XCol[column] == 3 || ((row == column) && (++XBackslash == 3)) || (((row + column) == 2) && (++XSlash == 3))))  ){
+        return `${getActivePlayer().name} win!`;
+      }
+      else{
+        return (++totalRound == 9) ? "Draw" : "Pending";
+      }
+    } 
+
+    let gameResult = "Pending";
+
     const playRound = (row, column) => {
       console.log(
         `Drawinging ${getActivePlayer().name}'s symbol into row ${row}, column ${column}...`
       );
       board.drawCell(row, column, getActivePlayer().value);
   
+      gameResult = checkGameResult(row, column, getActivePlayer().value)
+
       /*  This is where we would check for a winner and handle that logic,
           such as a win message. */
   
@@ -119,16 +142,19 @@ function GameController(
       printNewRound();
     };
 
-  // Initial play game message
-  printNewRound();
+    const getGameResult = () => gameResult;
+    
+    // Initial play game message
+    printNewRound();
 
-  // For the console version, we will only use playRound, but we will need
-  // getActivePlayer for the UI version
-  return {
-    playRound,
-    getActivePlayer,
-    getBoard: board.getBoard
-  };
+    // For the console version, we will only use playRound, but we will need
+    // getActivePlayer for the UI version
+    return {
+      playRound,
+      getActivePlayer,
+      getGameResult,
+      getBoard: board.getBoard
+    };
 }
 
 /*
@@ -193,7 +219,14 @@ function ScreenController() {
       if (board[selectedRow][selectedColumn].getValue()) return;
       
       game.playRound(selectedRow, selectedColumn);
+
       updateScreen();
+      
+      const gameResult = game.getGameResult();
+
+      if(gameResult != "Pending"){
+        playerTurnDiv.textContent = gameResult;
+      }
     }
 
     boardDiv.addEventListener("click", clickHandlerBoard);
