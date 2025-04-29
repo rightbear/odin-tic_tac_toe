@@ -115,8 +115,22 @@ function GameController(
     // This is the rule to check whether the game has reached the result after clicking buttons.
 
     const checkGameResult = (row, column, playerValue) => {
-      if( ((playerValue == 1) && (++ORow[row] == 3 || ++OCol[column] == 3 || ((row == column) && (++OBackslash == 3)) || (((row + column) == 2) && (++OSlash == 3)))) || 
-          ((playerValue == 2) && (++XRow[row] == 3 || ++XCol[column] == 3 || ((row == column) && (++XBackslash == 3)) || (((row + column) == 2) && (++XSlash == 3))))  ){
+
+      if(playerValue == 1) {
+        ++ORow[row];
+        ++OCol[column];
+        if(row == column) ++OBackslash;
+        if(row + column == 2) ++OSlash;
+      }
+      if(playerValue == 2) {
+        ++XRow[row];
+        ++XCol[column];
+        if(row == column) ++XBackslash;
+        if(row + column == 2) ++XSlash;
+      }
+
+      if( (ORow[row] == 3) || (OCol[column] == 3) || (OBackslash == 3) || (OSlash == 3) || 
+          (XRow[row] == 3) || (XCol[column] == 3) || (XBackslash == 3) || (XSlash == 3)  ){
         return `${getActivePlayer().name} win!`;
       }
       else{
@@ -132,7 +146,7 @@ function GameController(
       );
       board.drawCell(row, column, getActivePlayer().value);
   
-      gameResult = checkGameResult(row, column, getActivePlayer().value)
+      gameResult = checkGameResult(parseInt(row), parseInt(column), getActivePlayer().value)
 
       /*  This is where we would check for a winner and handle that logic,
           such as a win message. */
