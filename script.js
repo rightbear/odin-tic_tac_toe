@@ -150,6 +150,7 @@ function GameController(
     let gameResult = "Pending";
 
     const playRound = (row, column) => {
+
       console.log(
         `Drawinging ${getActivePlayer().name}'s symbol into row ${row}, column ${column}...`
       );
@@ -162,7 +163,6 @@ function GameController(
   
       // Switch player turn
       switchPlayerTurn();
-      printNewRound();
     };
 
     const getGameResult = () => gameResult;
@@ -175,13 +175,11 @@ function GameController(
       totalRound = 0;
       gameResult = "Pending";
     }
-    
-    // Initial play game message
-    printNewRound();
 
     // For the console version, we will only use playRound, but we will need
     // getActivePlayer for the UI version
     return {
+      printNewRound,
       playRound,
       getActivePlayer,
       getGameResult,
@@ -194,17 +192,21 @@ function GameController(
 ** Players will be interacting with the game through the DOM.
 ** We create some DOM references to our game board and player turn display.
 */
-function ScreenController() {
-    const game = GameController();
+function ScreenBoardController(player1Name, player2Name) {
+    const game = GameController(player1Name, player2Name);
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
-  
-    const updateScreen = () => {
+    const newGameBtn = document.querySelector('.newGame');
+    const boardDialog = document.querySelector("dialog");
+    const dialogMsg = document.querySelector("dialog > h2");
+    const dialogBtn = document.querySelector("dialog > button");
+
+    const updateBoard = (board) => {
+
       // clear the board
-      boardDiv.textContent = "";
+      boardDiv.innerHTML = "";
   
       // get the newest version of the board and most up-to-date active player turn
-      const board = game.getBoard();
       const activePlayer = game.getActivePlayer();
   
       // Display player's turn
@@ -239,24 +241,29 @@ function ScreenController() {
       })
     }
   
-    // Render dialog on the screen to show the game result and restart the game
-    function showDialog(gameResult){
-      const dialog = document.querySelector("dialog");
-      const dialogMsg = document.querySelector("dialog > h2");
-      const dialogBtn = document.querySelector("dialog > button");
+    // Reset user parameters, console and screen to start a new game
+    function resetGame() {
+      game.restartGame();
+      console.clear();
+      updateBoard(game.getBoard());
+    }
 
+    // Render dialog on the screen to show the game result and restart the game
+    function checkResult(gameResult){
       if(gameResult != "Pending"){
         playerTurnDiv.textContent = "Game Over";
-        dialog.showModal();
+        console.log("Game Over");
+        boardDialog.showModal();
         dialogMsg.textContent = gameResult;
+      }
+      else{
+        game.printNewRound();
       }
 
       // "Restart" button closes the dialog and restarts the game
       dialogBtn.addEventListener("click", () => {
-        game.restartGame();
-        console.clear();
-        dialog.close();
-        updateScreen();
+        boardDialog.close();
+        resetGame()
       });
     }
 
@@ -267,24 +274,83 @@ function ScreenController() {
       const selectedColumn = e.target.dataset.column;
 
       // Make sure I've clicked a cell and not the gaps in between the cells
-      if (!selectedRow || !selectedColumn) return
+      if (!selectedRow || !selectedColumn) return;
 
       // Make sure we draw a clicked cell that hasn't be drawn before 
       if (board[selectedRow][selectedColumn].getValue()) return;
-      
-      game.playRound(selectedRow, selectedColumn);
 
-      updateScreen();
-      
-      showDialog(game.getGameResult());
+      game.playRound(selectedRow, selectedColumn);
+      updateBoard(board);
+      checkResult(game.getGameResult());
     }
 
+    newGameBtn.addEventListener("click", resetGame);
     boardDiv.addEventListener("click", clickHandlerBoard);
 
-    // Initial render
-    updateScreen();
+    // Initial game board
+    updateBoard(game.getBoard());
+
+    // Initial play game message
+    game.printNewRound();
 
     // We don't need to return anything from this module because everything is encapsulated inside this screen controller.
 }
-  
-ScreenController();
+
+function ScreenFormController() {
+  const myForm = document.querySelector("form");
+  const containerDiv = document.querySelector(".container");
+
+  myForm.addEventListener('submit', function(event) {
+      // We use preventDefault() to prevent webite open when submitting the form
+      event.preventDefault();
+      
+      // preventDefault() will also block the validation function in form.
+      // We use checkValidity() and reportValidity() to check the validation of form additionally.
+      // If the form is invlaid(require fields is empty), stop event bubbling and show validation failing message.
+      if (!this.checkValidity()) {
+        event.stopPropagation();
+      }
+    
+      this.reportValidity();
+
+      const player1Name = myForm.elements.player1_name.value;
+      const player2Name = myForm.elements.player2_name.value;
+
+      // if the validation is passed, then remove the form and call the reder functions
+      while (containerDiv.firstChild) {
+        containerDiv.removeChild(containerDiv.firstChild);
+      }
+      
+      // Create board elements and Initial render for board
+      initialBoard();
+      ScreenBoardController(player1Name, player2Name);
+    });
+
+  function initialBoard() {
+      const addTurnH1 = document.createElement("h1");
+      addTurnH1.classList.add("turn");
+
+      const addBoardDiv = document.createElement("div");
+      addBoardDiv.classList.add("board");
+
+      const addGameBtn = document.createElement("button");
+      addGameBtn.classList.add("newGame");
+      addGameBtn.textContent = "New Game";
+
+      const addEndDialog = document.createElement("dialog");
+      addEndDialog.classList.add("endDialog");
+
+      containerDiv.append(addTurnH1, addBoardDiv, addGameBtn, addEndDialog);
+
+      const addResultH2 = document.createElement("h2")
+      addResultH2.classList.add("result");
+
+      const addrestartGame = document.createElement("button");
+      addrestartGame.classList.add("restartGame");
+      addrestartGame.textContent = "Restart";
+
+      addEndDialog.append(addResultH2, addrestartGame);
+  }
+}
+
+ScreenFormController();
