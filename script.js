@@ -23,12 +23,12 @@ function Cell() {
 }
 
 /*
-** The Gameboard represents the state of the board
+** The Gameboard is a module represents the state of the board
 ** Each equare holds a Cell (defined later)
 ** and we expose a drawCell method to be able to change content in Cells
 */
 
-function Gameboard() {
+const Gameboard = (function() {
     const rows = 3;
     const columns = 3;
     const board = [];
@@ -76,27 +76,24 @@ function Gameboard() {
     }
 
     return { getBoard, drawCell, printBoard, resetBoard };
-}
+})();
 
 /* 
-** The GameController will be responsible for controlling the 
-** flow and state of the game's turns, as well as whether
+** The GameController is a module, will be responsible for controlling
+** the flow and state of the game's turns, as well as whether
 ** anybody has won the game
 */
 
-function GameController(
-    playerOneName = "Player One",
-    playerTwoName = "Player Two"
-) {
-    const board = Gameboard();
+const GameController = (function(GameboardModule) {
+    const board = GameboardModule;
   
     const players = [
       {
-        name: playerOneName,
+        name: "Player One",
         value: 1
       },
       {
-        name: playerTwoName,
+        name: "Player Two",
         value: 2
       }
     ];
@@ -167,6 +164,11 @@ function GameController(
 
     const getGameResult = () => gameResult;
 
+    const setUserName = (player1Name, player2Name) => {
+      if (player1Name) players[0].name = player1Name;
+      if (player2Name) players[1].name = player2Name;
+    };
+
     const restartGame = () =>  {
       board.resetBoard();
       activePlayer = players[0];
@@ -174,7 +176,7 @@ function GameController(
       OBackslash = 0, OSlash = 0, XBackslash = 0, XSlash = 0;
       totalRound = 0;
       gameResult = "Pending";
-    }
+    };
 
     // For the console version, we will only use playRound, but we will need
     // getActivePlayer for the UI version
@@ -184,22 +186,25 @@ function GameController(
       getActivePlayer,
       getGameResult,
       getBoard: board.getBoard,
+      setUserName,
       restartGame
     };
-}
+})(Gameboard);
 
 /*
 ** Players will be interacting with the game through the DOM.
 ** We create some DOM references to our game board and player turn display.
 */
 function ScreenBoardController(player1Name, player2Name) {
-    const game = GameController(player1Name, player2Name);
+    const game = GameController;
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
     const newGameBtn = document.querySelector('.newGame');
     const boardDialog = document.querySelector("dialog");
     const dialogMsg = document.querySelector("dialog > h2");
     const dialogBtn = document.querySelector("dialog > button");
+
+    game.setUserName(player1Name, player2Name);
 
     const updateBoard = (board) => {
 
@@ -292,8 +297,6 @@ function ScreenBoardController(player1Name, player2Name) {
 
     // Initial play game message
     game.printNewRound();
-
-    // We don't need to return anything from this module because everything is encapsulated inside this screen controller.
 }
 
 function ScreenFormController() {
@@ -351,6 +354,8 @@ function ScreenFormController() {
 
       addEndDialog.append(addResultH2, addrestartGame);
   }
+
+  // We don't need to return anything from this module because everything is encapsulated inside this ScreenFormController.
 }
 
 ScreenFormController();
