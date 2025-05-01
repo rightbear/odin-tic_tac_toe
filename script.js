@@ -237,12 +237,11 @@ function ScreenBoardController(player1Name, player2Name) {
             cellContent = 'X';
           }
           else{
-            cellContent = "N";
+            cellContent = " ";
           }
           cellButton.textContent = cellContent;
           boardDiv.appendChild(cellButton);
         })
-        boardDiv.appendChild(document.createElement("br"));
       })
     }
   

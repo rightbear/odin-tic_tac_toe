@@ -23,30 +23,30 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    --color-font-theme: rgb(70, 5, 66);
+    --color-blue-theme: #00539F;
+    --color-orange-theme: #FF9500;
 }
 
-form, .game {
+
+/*************************************/
+
+form {
     width: 800px;
     height: 500px;
-
-    background-color: #FF9500;
+    text-align: center;
+    background-color: var(--color-orange-theme);
     padding: 20px;
     border: 5px solid black;
 }
  
-h1 {
+form > h1 {
     font-size: 60px;
-    text-align: center;
+    margin: 0 auto;
 
-    margin: auto;
-
-    color: #00539F;
+    color: var(--color-blue-theme);
     text-shadow: 3px 3px 1px black;
-}
-
-form {
-    text-align: center;
-    --color-font-theme: rgb(70, 5, 66);
 }
 
 .player1, .player2 {
@@ -81,7 +81,7 @@ form input:focus {
     color: var(--color-font-theme);
 }
 
-form button {
+form > button {
     background-color: var(--color-font-theme);
     border: 2px solid lightgray;
     border-radius: 4px;
@@ -98,8 +98,77 @@ form button {
     transition-duration: 0.2s;
 }
 
-form button:hover {
-    background-color: #FF9500;
+form > button:hover {
+    background-color: var(--color-orange-theme);
+    border: 2px solid var(--color-font-theme);
+    color: var(--color-font-theme);
+}
+
+/*************************************/
+
+.game {
+    width: 800px;
+    height: 500px;
+    text-align: center;
+    background-color: var(--color-orange-theme);
+    padding: 20px;
+    border: 5px solid black;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game > h1 {
+    font-size: 60px;
+    margin: 0 auto;
+
+    color: var(--color-blue-theme);
+    text-shadow: 3px 3px 1px black;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+
+    /* make inner border between buttos in grid */
+    background-color: black;
+    border: 0px;
+    column-gap: 5px;
+    row-gap: 5px;
+
+    height: 210px;
+    width: 210px;
+    margin: 20px 0px;
+}
+
+.board > button {
+    border: 1px solid var(--color-orange-theme);
+    background-color: var(--color-orange-theme);
+    font-size: 45px;
+    text-align: center;
+}
+
+.game > button {
+    background-color: var(--color-font-theme);
+    border: 2px solid lightgray;
+    border-radius: 4px;
+
+    color: lightgray;
+    font-size: 25px;
+    font-weight: bold;
+    text-decoration: none;
+
+    padding: 16px 32px;
+    margin: 8px;
+
+    cursor: pointer;
+    transition-duration: 0.2s;
+}
+
+.game > button:hover {
+    background-color: var(--color-orange-theme);
     border: 2px solid var(--color-font-theme);
     color: var(--color-font-theme);
 }
