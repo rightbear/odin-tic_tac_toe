@@ -2,11 +2,15 @@
     margin: 0;  
     padding: 0;
     box-sizing: border-box;
+
+    --color-font-theme: rgb(70, 5, 66);
+    --color-blue-theme: #00539F;
+    --color-orange-theme: #FF9500;
 }
 
 html {
     font-family: 'Open Sans', sans-serif;
-    background-color: #00539F;
+    background-color: var(--color-blue-theme);
 }
 
 /*************************************/
@@ -23,10 +27,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-
-    --color-font-theme: rgb(70, 5, 66);
-    --color-blue-theme: #00539F;
-    --color-orange-theme: #FF9500;
 }
 
 
@@ -171,4 +171,100 @@ form > button:hover {
     background-color: var(--color-orange-theme);
     border: 2px solid var(--color-font-theme);
     color: var(--color-font-theme);
+}
+
+/*************************************/
+
+dialog {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin:auto;
+}
+
+/* Change Dialog’s backdrop */
+::backdrop {
+    background-image: linear-gradient(
+      45deg,
+      grey
+    );
+    opacity: 0.75;
+}
+
+/* Open state of the dialog  */
+dialog:open {
+    opacity: 1;
+    transform: scaleY(1);
+}
+  
+/* Closed state of the dialog   */
+dialog {
+  opacity: 0;
+  transform: scaleY(0);
+  transition:
+  opacity 0.7s ease-out,
+  transform 0.7s ease-out,
+  overlay 0.7s ease-out allow-discrete,
+  display 0.7s ease-out allow-discrete;
+  /* Equivalent to
+  ransition: all 0.7s allow-discrete; */
+}
+  
+/* Before open state  */
+/* Needs to be after the previous dialog:open rule to take effect,
+  as the specificity is the same */
+@starting-style {
+  dialog:open {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+}
+  
+/* Transition the :backdrop when the dialog modal is promoted to the top layer */
+dialog::backdrop {
+background-color: rgb(0 0 0 / 0%);
+  transition:
+    display 0.7s allow-discrete,
+    overlay 0.7s allow-discrete,
+    background-color 0.7s;
+  /* Equivalent to
+  transition: all 0.7s allow-discrete; */
+}
+  
+dialog:open::backdrop {
+  background-color: rgb(0 0 0 / 25%);
+}
+  
+/* This starting-style rule cannot be nested inside the above selector
+  because the nesting selector cannot represent pseudo-elements. */
+  
+@starting-style {
+  dialog:open::backdrop {
+    background-color: rgb(0 0 0 / 0%);
+  }
+}
+
+/*************************************/
+
+dialog > .result {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+dialog > button {
+    background-color: var(--color-blue-theme);
+    border: none;
+    border-radius: 4px;
+    font-size: 20px;
+    color: #FFFFFF;
+    padding: 20px;
+    width: 150px;
+    text-align: center;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+dialog > button:hover {
+    background-color: #022d55;
 }

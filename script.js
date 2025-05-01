@@ -137,7 +137,7 @@ const GameController = (function(GameboardModule) {
 
       if( (ORow[row] == 3) || (OCol[column] == 3) || (OBackslash == 3) || (OSlash == 3) || 
           (XRow[row] == 3) || (XCol[column] == 3) || (XBackslash == 3) || (XSlash == 3)  ){
-        return `${getActivePlayer().name} win!`;
+        return `${getActivePlayer().name} wins!`;
       }
       else{
         return (++totalRound == 9) ? "Draw" : "Pending";
