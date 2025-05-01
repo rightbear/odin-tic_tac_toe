@@ -330,6 +330,11 @@ function ScreenFormController() {
     });
 
   function initialBoard() {
+      const addGameDiv = document.createElement("div");
+      addGameDiv.classList.add("game");
+
+      containerDiv.append(addGameDiv);
+      
       const addTurnH1 = document.createElement("h1");
       addTurnH1.classList.add("turn");
 
@@ -343,7 +348,7 @@ function ScreenFormController() {
       const addEndDialog = document.createElement("dialog");
       addEndDialog.classList.add("endDialog");
 
-      containerDiv.append(addTurnH1, addBoardDiv, addGameBtn, addEndDialog);
+      addGameDiv.append(addTurnH1, addBoardDiv, addGameBtn, addEndDialog);
 
       const addResultH2 = document.createElement("h2")
       addResultH2.classList.add("result");

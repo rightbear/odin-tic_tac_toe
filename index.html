@@ -14,30 +14,31 @@
         <!-- The page to input player names -->
         <form class="setUser">
             <h1 class="indicarion">Enter Player Names</h1>
-            <div class="player1">
-                <h3>The symbol of player1 is 'O'</h3>
-                <label for="player1_name">Player1 Name:</label>
-                <input type="text" id="player1_name" name="player1_name" required>
-              </div>
-              
-              <div class="player2">
-                <h3>The symbol of player2 is 'X'</h3>
-                <label for="player2_name">Player2 Name:</label>
-                <input type="text" id="player2_name" name="player2_name" required>
-              </div>
 
-              <button type="submit">Let's Play</button>
+            <div class="player1">
+                <label for="player1_name">Player One (O)</label>
+                <input type="text" id="player1_name" name="player1_name" placeholder="Enter player1's name..." required>
+            </div>
+              
+            <div class="player2">
+                <label for="player2_name">Player Two (X)</label>
+                <input type="text" id="player2_name" name="player2_name" placeholder="Enter player2's name..." required>
+            </div>
+
+            <button type="submit">Let's Play</button>
         </form>
         
         <!-- The page to play tic-tac-toe game -->
         <!--
-        <h1 class="turn"></h1>
-        <div class="board"></div>
-        <button class="newGame">New Game</button>
-        <dialog class="endDialog">
-            <h2 class="result"></h2>
-            <button class="restartGame">Restart</button>
-        </dialog>
+        <div class="game">
+            <h1 class="turn"></h1>
+            <div class="board"></div>
+            <button class="newGame">New Game</button>
+            <dialog class="endDialog">
+                <h2 class="result"></h2>
+                <button class="restartGame">Restart</button>
+            </dialog>
+        </div>
         -->
     </div>
 </body>
