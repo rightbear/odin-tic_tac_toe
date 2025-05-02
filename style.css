@@ -140,17 +140,17 @@ form > button:hover {
 
     /* make inner border between buttos in grid */
     background-color: black;
-    border: 0px;
+    border: none;
     column-gap: 5px;
     row-gap: 5px;
 
-    height: 210px;
-    width: 210px;
+    height: 220px;
+    width: 220px;
     margin: 20px 0px;
 }
 
 .board > button {
-    border: 1px solid var(--color-orange-theme);
+    border: none;
     background-color: var(--color-orange-theme);
     font-size: 45px;
     text-align: center;
