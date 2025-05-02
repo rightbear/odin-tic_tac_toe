@@ -37,6 +37,7 @@ form {
     height: 500px;
 
     /* Center all elements in HTML form(.setUser) */
+    /* text-align property can center inline elements */
     text-align: center;
 
     background-color: var(--color-orange-theme);
@@ -112,12 +113,13 @@ form > button:hover {
 .game {
     width: 800px;
     height: 500px;
-    text-align: center;
+
     background-color: var(--color-orange-theme);
     padding: 20px;
     border: 5px solid black;
 
     /* Center all elements in HTML div(.game) */
+    /* flex can center block + inline elements */
     display: flex;
     flex-direction: column;
     align-items: center;
